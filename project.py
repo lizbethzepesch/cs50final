@@ -1,5 +1,4 @@
 from tkinter import *
-from set_ui import setUI
 from paint import Paint
 
 
