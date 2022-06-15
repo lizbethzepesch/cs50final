@@ -9,21 +9,23 @@ def is_word_guessed(secret, letters_guessed):
 
 
 def get_guessed_word(secret, letters_guessed, guessed_word):
+    guessed_list = list(guessed_word)
     for i in range(len(secret)):
         if secret[i] in letters_guessed:
-            guessed_word[i] = secret[i]
-    return guessed_word
+            guessed_list[i] = secret[i]
+    return ''.join(guessed_list)
 
 
 def get_available_letters(letters_guessed, available_letters):
     for letter in available_letters:
         if letter in letters_guessed:
             available_letters.remove(letter)
+    return available_letters
 
 
-def hangman(secret):
+def main():
+    secret = 'purples'
     tries = 8
-    lets = 0
     letter = ''
 
     guessed_word = len(secret) * '_'
@@ -37,20 +39,31 @@ def hangman(secret):
         print("-------------\n")
         print("You have {} guesses left.\n".format(tries))
         print("Available letters: ")
-        get_available_letters(letters_guessed, available_letters)
-        print(available_letters)
+        available_letters = get_available_letters(letters_guessed, available_letters)
+        print(' '.join(available_letters))
+        print(guessed_word)
         print('\n')
 
         print("Please guess a letter: ")
         letter = input()
-        letters_guessed[lets] = letter
-        lets += 1
+        letters_guessed.append(letter)
+
         if is_word_guessed(secret, letters_guessed):
             print("-------------\nCongratulations, you won!")
+            print("The word was '{}'".format(secret))
             return
         else:
+            if len(letter) != 1:
+                print("Oops, you didn't write the letter!")
+                print(guessed_word)
+                continue
+            if not letter.isalpha():
+                print("Oops, you didn't write the letter!")
+                print(guessed_word)
+                continue
             if letter not in available_letters:
                 print("Oops, you already tried this letter!")
+                print(guessed_word)
                 continue
             else:
                 if letter in secret:
@@ -65,12 +78,10 @@ def hangman(secret):
 
             if secret == letter:
                 print("-------------\nCongratulations, you won!")
+                print("The word was '{}'".format(secret))
+
                 return
 
-
-def main():
-    secret = 'purples'
-    hangman(secret)
 
 if __name__ == '__main__':
     main()

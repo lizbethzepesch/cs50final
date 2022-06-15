@@ -1,15 +1,10 @@
-# PAINTER
-#### Video Demo:  
+# HANGMAN
+### Video Demo:
     <URL HERE>
-#### Description:
-    We did a painter - simple app for paint!
-    
-    As you can know I like to draw so I with Anton Chaus tried to create some new app for drawing for us!
-
-    Painter - that's it. 
+### Description:
+    Our goal was to recall old favourite game - Hangman!
+    The hangman, also known as "hanged" is a classic game in which you will have to guess a word by choosing the letters that you think may be included in it. The hangman game will give you the option to choose vowels and consonants to try to guess which word is hidden.
 
 
-    We divided our work to two parts:
 
-    - main class in the file paint.py was written by Anton
-    - other functions and unit tests were written by Liza
+#### How we divided the work
