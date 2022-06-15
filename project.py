@@ -1,5 +1,6 @@
 import string
-
+from tkinter import *
+import os
 
 def is_word_guessed(secret, letters_guessed):
     for letter in secret:
@@ -13,7 +14,7 @@ def get_guessed_word(secret, letters_guessed, guessed_word):
     for i in range(len(secret)):
         if secret[i] in letters_guessed:
             guessed_list[i] = secret[i]
-    return ''.join(guessed_list)
+    return ' '.join(guessed_list)
 
 
 def get_available_letters(letters_guessed, available_letters):
@@ -24,63 +25,101 @@ def get_available_letters(letters_guessed, available_letters):
 
 
 def main():
-    secret = 'purples'
-    tries = 8
-    letter = ''
+    root = Tk()
+    root.geometry('800x600')
+    root.title('Hangman')
 
+    tries = 1
+    inp = StringVar()
+    secret = 'campus'
     guessed_word = len(secret) * '_'
-    letters_guessed = []
+    letters_guessed = ['', ]
     available_letters = list(string.ascii_lowercase)
 
-    print("Welcome to the game, Hangman!\n")
-    print("I am thinking of a word that is {} letters long.\n".format(len(secret)))
+    def get_letter():
+        letters_guessed.append(inputt.get().lower())
+        print(letters_guessed[-1])
+        root.update_idletasks()
 
-    while tries:
-        print("-------------\n")
-        print("You have {} guesses left.\n".format(tries))
-        print("Available letters: ")
-        available_letters = get_available_letters(letters_guessed, available_letters)
-        print(' '.join(available_letters))
-        print(guessed_word)
-        print('\n')
 
-        print("Please guess a letter: ")
-        letter = input()
-        letters_guessed.append(letter)
+    hangs_pics = {1: PhotoImage(file='./img/1.png'),
+            2: PhotoImage(file='./img/2.png'),
+            3: PhotoImage(file='./img/3.png'),
+            4: PhotoImage(file='./img/4.png'),
+            5: PhotoImage(file='./img/5.png'),
+            6: PhotoImage(file='./img/6.png'),
+            7: PhotoImage(file='./img/7.png'),
+            8: ''}
 
-        if is_word_guessed(secret, letters_guessed):
-            print("-------------\nCongratulations, you won!")
-            print("The word was '{}'".format(secret))
-            return
+    label = Label(root, text='Hangman', font=('Courier New', 35, 'bold'), anchor="center")
+    word = Label(root, text=' '.join(list(guessed_word)), font=('Courier New', 20, 'bold'), anchor="center")
+    tryy = Label(root, text='You have {} tries'.format(str(8 - tries)), font=('Courier New', 15, 'bold'), anchor="center")
+    space = Label(root, text=" ", font=('Courier New', 15, 'bold'), anchor="center")
+    available_letters_tk = Label(root, text="Available letters:", font=('Courier New', 16, 'bold'), anchor="center")
+    available_letters = ' '.join(get_available_letters(letters_guessed, available_letters))
+    available_letters_list_tk = Label(root, text=available_letters, font=('Courier New', 15, 'bold'), anchor="center")
+    space2 = Label(root, text=" ", font=('Courier New', 15, 'bold'), anchor="center")
+    chel = Label(root, image=hangs_pics[tries], anchor="center")
+    space3 = Label(root, text=" ", font=('Courier New', 20, 'bold'), anchor="center")
+    inputt = Entry(root, font=('Courier New', 15, 'bold'), textvariable=inp, relief=RIDGE)
+    button = Button(root, text='submit', font=('Courier New', 10, 'bold'), command=get_letter)
+
+    oops = Label(root, text="Oops, you didn't write the letter!", font=('Courier New', 10, 'bold'), anchor="center")
+    oops2 = Label(root, text="Oops, you already tried this letter!", font=('Courier New', 10, 'bold'), anchor="center")
+    oops3 = Label(root, text="Oops! That letter is not in my word!", font=('Courier New', 10, 'bold'), anchor="center")
+    win = Label(root, text="You win!", font=('Courier New', 35, 'bold'), anchor="center")
+
+    label.pack()
+    word.pack()
+    tryy.pack()
+    space.pack()
+    available_letters_tk.pack()
+    available_letters_list_tk.pack()
+    space2.pack()
+    chel.pack()
+    space3.pack()
+    inputt.pack()
+    button.pack()
+
+    if tries == 8:
+        inputt.destroy()
+        space3.destroy()
+        available_letters_tk.destroy()
+        available_letters_list_tk.destroy()
+        button.destroy()
+
+        lose = Label(root, text="You lose!", font=('Courier New', 35, 'bold'), anchor="center")
+        lose.pack()
+
+    # if is_word_guessed(secret, letters_guessed):
+    if letters_guessed[-1] == 'w':
+        inputt.destroy()
+        space3.destroy()
+        available_letters_tk.destroy()
+        available_letters_list_tk.destroy()
+        button.destroy()
+        win.pack()
+    else:
+        if len(letters_guessed[-1]) != 1 or not letters_guessed[-1].isalpha():
+            oops.pack()
+        if letters_guessed[-1] not in available_letters:
+            oops2.pack()
         else:
-            if len(letter) != 1:
-                print("Oops, you didn't write the letter!")
-                print(guessed_word)
-                continue
-            if not letter.isalpha():
-                print("Oops, you didn't write the letter!")
-                print(guessed_word)
-                continue
-            if letter not in available_letters:
-                print("Oops, you already tried this letter!")
-                print(guessed_word)
-                continue
+            if letters_guessed[-1] in secret:
+                guessed_word = get_guessed_word(secret, letters_guessed, guessed_word)
             else:
-                if letter in secret:
-                    guessed_word = get_guessed_word(secret, letters_guessed, guessed_word)
-                    print("Good guess:")
-                    print(guessed_word)
+                oops3.pack()
+                tries += 1
 
-                else:
-                    print("Oops! That letter is not in my word:")
-                    tries -= 1
-                    print(guessed_word)
+        if secret == letters_guessed[-1]:
+            inputt.destroy()
+            space3.destroy()
+            available_letters_tk.destroy()
+            available_letters_list_tk.destroy()
+            button.destroy()
+            win.pack()
 
-            if secret == letter:
-                print("-------------\nCongratulations, you won!")
-                print("The word was '{}'".format(secret))
-
-                return
+    root.mainloop()
 
 
 if __name__ == '__main__':
