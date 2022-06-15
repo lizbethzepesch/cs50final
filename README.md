@@ -12,3 +12,5 @@
 
 
 #### How we divided the work
+    Anton implemented logic of game. He is more back-ender than Liza, so he wrote the brain of game.
+    Liza did all the things regarding UI. She learned Tkinter to write good interface for game.
